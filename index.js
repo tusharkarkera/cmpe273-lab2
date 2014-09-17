@@ -41,15 +41,21 @@ function post(request, response) {
 	// TODO: set new session id to the 'session_id' cookie in the response
 	// replace "Logged In" response with response.end(login.hello(newSessionId));
 
-	response.end("Logged In\n");
+	var name = request.body.name;
+	var email = request.body.email;
+	var newSessionId = login.login(name,email);
+	response.setHeader('Content-Type','text/html');
+	response.setHeader('Set Cookie', 'session_id=' +newSessionId);
+	response.end(login.hello(newSessionId));
 };
 
 function del(request, response) {
 	console.log("DELETE:: Logout from the server");
  	// TODO: remove session id via login.logout(xxx)
  	// No need to set session id in the response cookies since you just logged out!
-
-  	response.end('Logged out from the server\n');
+	var cookies = request.cookies;
+	var sid = cookies['session_id'];
+  	response.end(login.logout(sid));
 };
 
 function put(request, response) {
